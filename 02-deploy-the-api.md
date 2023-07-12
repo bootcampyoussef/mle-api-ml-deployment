@@ -40,7 +40,7 @@ We'll be creating a Artifact Registry with the following settings:
 - name: docker-registry
 - format: Docker
 - mode: standard
-- region: europe-west3 (if you want you can also choose a low CO2 region like belgium)
+- region: europe-west3 
 
 We can leave the rest of the settings as they are. Click "Create".
 
@@ -73,7 +73,7 @@ To create a virtual machine, click the "Navigation menu" button in the top left 
 We'll be creating a virtual machine with the following settings:
 
 - Name: `ml-webservice`
-- Region: `europe-west3` (if you want you can also choose a low CO2 region like belgium)
+- Region: `europe-west3` 
 - Zone: `europe-west3-c`
 - Series: `E2`
 - Machine type: `e2-small` (for now it is only for testing)
