@@ -17,8 +17,8 @@ def index():
 We can start this application by running the following command:
 
 ```bash
-cd webservice
-uvicorn app:app --reload -port 9696
+cd webservice_locally
+uvicorn app:app --reload --port 9696
 ```
 
 This will start the application on port 9696. You can visit http://localhost:9696/ to see the application running.
