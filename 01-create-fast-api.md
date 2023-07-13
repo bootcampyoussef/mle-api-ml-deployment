@@ -1,6 +1,6 @@
 # Create the FastAPI app
 
-The first step is to create a new Python file called `app.py` in the `webservice` folder with a basic FastAPI application:
+The first step is to create a new Python file called `app.py` in the `webservice_locally` folder with a basic FastAPI application:
 
 
 ```python
@@ -17,8 +17,8 @@ def index():
 We can start this application by running the following command:
 
 ```bash
-cd webservice
-uvicorn app:app --reload -port 9696
+cd webservice_locally
+uvicorn app:app --reload --port 9696
 ```
 
 This will start the application on port 9696. You can visit http://localhost:9696/ to see the application running.
@@ -38,7 +38,7 @@ For the response we are expecting the following fields:
 - trip_distance: Distance of the ride in miles
 - predicted_duration: Predicted duration of the ride in seconds
 
-We can create a new file called `data_model.py` in the `webservice` folder and add the following code to it:
+We can create a new file called `data_model.py` in the `webservice_locally` folder and add the following code to it:
 
 ```python
 from pydantic import BaseModel
