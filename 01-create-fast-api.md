@@ -38,7 +38,7 @@ For the response we are expecting the following fields:
 - trip_distance: Distance of the ride in miles
 - predicted_duration: Predicted duration of the ride in seconds
 
-We can create a new file called `data_model.py` in the `webservice` folder and add the following code to it:
+We can create a new file called `data_model.py` in the `webservice_locally` folder and add the following code to it:
 
 ```python
 from pydantic import BaseModel
