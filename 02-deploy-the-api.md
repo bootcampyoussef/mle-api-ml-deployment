@@ -33,7 +33,7 @@ Now if you haven't done it already you need to create a Docker Registry in GCP.
 
 A Artifact Registry is a private Docker registry. You can use a Artifact Registry to store Docker images for your applications and services.
 
-To create a Artifact Registry, click the "Navigation menu" button in the top left corner of the console, and then click "Artifact Registry". Then click Enableafterward you can click on the + to create repository.
+To create a Artifact Registry, click the "Navigation menu" button in the top left corner of the console, and then click "Artifact Registry". Then click Enable afterward you can click on the + to create repository.
 
 We'll be creating a Artifact Registry with the following settings:
 
@@ -121,7 +121,6 @@ Now that we've pushed the Docker image to the Artifact Registry, we can pull the
 ```bash
 docker pull europe-west3-docker.pkg.dev/<project-id>/docker-registry/ml-webservice:latest
 ```
-docker pull europe-west3-docker.pkg.dev/positive-sector-383614/neuefische-mle-bootcamp/ml-webservice:latest
 
 
 Replace `<project-id>` with the ID of the project that you want to use. 
