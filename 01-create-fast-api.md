@@ -1,6 +1,6 @@
 # Create the FastAPI app
 
-The first step is to create a new Python file called `app.py` in the `webservice` folder with a basic FastAPI application:
+The first step is to create a new Python file called `app.py` in the `webservice_locally` folder with a basic FastAPI application:
 
 
 ```python
