@@ -52,13 +52,13 @@ We'll be creating a firewall rule with the following settings:
 1. In GCP go to VPC network
 2. Go to Firewall rules
 3. Click on Create Firewall Rule
-4. Give it a name: mlflow-tracking-server
+4. Give it a name: webservice-rule
 5. Set logging to On
 6. Network: default
 7. Priority: 1000
 8. Direction of traffic: Ingress
 9. Action on match: Allow
-10. Target-Tag: mlflow-tracking-server
+10. Target-Tag: webserver
 11. Source IP ranges: 0.0.0.0/0
 12. Protocols and ports: tcp:9696
 13. Click on Create
@@ -77,7 +77,7 @@ We'll be creating a virtual machine with the following settings:
 - Zone: `europe-west3-c`
 - Series: `E2`
 - Machine type: `e2-small` (for now it is only for testing)
-- Network tags: 
+- Network tags: webserver
 
 Under Access scopes, we'll select "Allow full access to all Cloud APIs". 
 
@@ -95,7 +95,11 @@ docker buildx build --no-cache --platform linux/amd64 --push -t europe-west3-doc
 Replace `<project-id>` with the ID of the project that you want to use. Replace `europe-west3-docker.pkg.dev` with the location of the Artifact Registry you chose.
 Replace `<name of your registry>` with the name of your registry. If you followed the steps above it should be `docker-registry`.
 
+If you get a permission error run the following command in your terminal:
 
+```bash
+gcloud auth configure-docker europe-west3-docker.pkg.dev
+```
 
 ### Install Docker in the Virtual Machine
 
