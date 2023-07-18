@@ -86,7 +86,7 @@ We can leave the rest of the settings as they are. Click "Create".
 
 ### Push the Docker Image to the Artifact Registry
 
-Now we can push our Docker of the web server from yesterday to the Artifact Registry. To push the Docker image to the Artifact Registry, run the following command in the terminal window:
+Now we can push our Docker of the web server to the Artifact Registry. To push the Docker image to the Artifact Registry, run the following command in the terminal window:
 
 ```bash
 docker buildx build --no-cache --platform linux/amd64 --push -t europe-west3-docker.pkg.dev/<project-id>/<name of your registry>/ml-webservice:latest  .
