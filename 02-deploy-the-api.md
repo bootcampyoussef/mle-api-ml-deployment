@@ -31,7 +31,7 @@ Now if you haven't done it already you need to create a Docker Registry in GCP.
 
 ### Create a Artifact Registry
 
-A Artifact Registry is a private Docker registry. You can use a Artifact Registry to store Docker images for your applications and services.
+An Artifact Registry is a private Docker registry. You can use a Artifact Registry to store Docker images for your applications and services.
 
 To create a Artifact Registry, click the "Navigation menu" button in the top left corner of the console, and then click "Artifact Registry". Then click Enable afterward you can click on the + to create repository.
 
