@@ -64,7 +64,6 @@ Back to the `predict.py`. We will use the model name and the stage to load the m
 
 ```python
 
-```python
 import mlflow
 from google.cloud import storage
 import os
