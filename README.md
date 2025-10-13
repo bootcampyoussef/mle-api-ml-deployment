@@ -35,15 +35,51 @@ For macOS, you can install the GCP SDK by running the following command in your 
 ```bash
 brew cask install google-cloud-sdk
 ```
+ For `PowerShell` CLI :
+Using Chocolatey (if installed)
+`choco install gcloudsdk`
+
+Or download and run the installer directly
+(New-Object Net.WebClient).DownloadFile("https://dl.google.com/dl/cloudsdk/channels/rapid/GoogleCloudSDKInstaller.exe", "$env:Temp\GoogleCloudSDKInstaller.exe")
+& $env:Temp\GoogleCloudSDKInstaller.exe
+
+  For `Git-Bash` CLI :
+
+Download the installer
+curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/GoogleCloudSDKInstaller.exe
+
+ Run it (opens the GUI installer)
+./GoogleCloudSDKInstaller.exe
 
 
+## Environment
 
-## Environment 
+Please make sure you have forked the repo and set up a new virtual environment. For this purpose you can use the following commands:
 
-```bash
-pyenv local 3.11.3
-python -m venv .venv
-source .venv/bin/activate
-pip install --upgrade pip
-pip install -r requirements.txt
-```
+### **`macOS`**
+```BASH
+  pyenv local 3.11.3
+  python -m venv .venv
+  source .venv/bin/activate
+  pip install --upgrade pip
+  pip install -r requirements.txt
+  ```
+### **`WindowsOS`**
+ For `PowerShell` CLI :
+  ```powershell
+  pyenv local 3.11.3
+  python -m venv .venv
+  .venv\Scripts\Activate.ps1
+  python -m pip install --upgrade pip
+  pip install -r requirements.txt
+  ```
+
+  For `Git-Bash` CLI :
+
+  ```BASH
+  pyenv local 3.11.3
+  python -m venv .venv
+  source .venv/Scripts/activate
+  python -m pip install --upgrade pip
+  pip install -r requirements.txt
+  ```
