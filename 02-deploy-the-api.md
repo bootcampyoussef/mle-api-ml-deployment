@@ -52,15 +52,15 @@ We'll be creating a firewall rule with the following settings:
 1. In GCP go to VPC network
 2. Go to Firewall rules
 3. Click on Create Firewall Rule
-4. **Give it a name**: webservice-rule
+4. Give it a name: webservice-rule
 5. Set logging to On
 6. Network: default
 7. Priority: 1000
-8. **Direction of traffic**: Ingress
-9. **Action on match**: Allow
-10. **Target-Tag**: webserver
-11. **Source IP ranges**: 0.0.0.0/0
-12. **Protocols and ports**: tcp:9696
+8. Direction of traffic: Ingress
+9. Action on match: Allow
+10. Target-Tag: webserver
+11. Source IP ranges: 0.0.0.0/0
+12. Protocols and ports: tcp:9696
 13. Click on Create
 
 
