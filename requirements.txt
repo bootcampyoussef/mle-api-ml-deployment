@@ -2,6 +2,6 @@ pydantic
 fastapi
 mlflow
 uvicorn
-jupyter
+jupyterlab
 python-dotenv
 google-cloud-storage
