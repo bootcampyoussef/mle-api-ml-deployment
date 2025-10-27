@@ -9,7 +9,7 @@ We need to create a **`Dockerfile`** in the `webservice_deployment` folder. The 
 
 ```Dockerfile
 # Use the official Python image as the base image
-FROM python:3.11.3-slim-buster
+FROM python:3.11.13-slim-bookworm
 
 # Set the working directory
 WORKDIR /app
@@ -155,7 +155,13 @@ Replace `<your mlflow tracking uri>` with the mlflow tracking uri you got from t
 
 Now that we've run the Docker image, we can connect to the web server. To connect to the web server, open a browser and go to `http://<ip-address>:9696`. Replace `<ip-address>` with the **public IP address** of the virtual machine. You can find the public IP address of the virtual machine in the GCP console.
 
-# IMPORTANT
+## **Diagram**
+
+When you are done with the exercise this is the structure you will have created the structure below
+
+![diagram](./images/diagram.png)
+
+## **IMPORTANT**
 
 After you are done: **STOP EVERY RUNNING SERVICE!**
 So stop the VM and the SQL Database. Running services cost money/credits!
