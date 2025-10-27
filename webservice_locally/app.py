@@ -14,4 +14,4 @@ def index():
 @app.post("/predict", response_model=TaxiRidePrediction)
 def predict_duration(data: TaxiRide):
     prediction = predict("lr-ride-duration", data)
-    return TaxiRidePrediction(**data.dict(), predicted_duration=prediction)
+    return TaxiRidePrediction(**data.model_dump(), predicted_duration=prediction)
