@@ -11,22 +11,33 @@ Because we want to run a **web server**, we'll be using Cloud Run services.
 
 ## Create a Cloud Run Service
 
-To create a Cloud Run service, click the "Navigation menu" button in the top left corner of the console, and then click "Cloud Run". Then click "Create Service".
+To create a Cloud Run service, click the **Navigation menu** button in the top left corner of the console, and then click **Cloud Run**. Then click **Services**. Once in **Services** click on **+ Deploy container**.
 
-Under `Deploy one revision from an existing container image` choose the **Docker image** that we uploaded to the **Artifact Registry**. It should be `europe-west3-docker.pkg.dev/<project-id>/docker-registry/ml-webservice:latest`. Replace `<project-id>` with the ID of the project that you want to use.
-
-In the next step, we'll configure the service. We'll choose **`CPU is only allocated during request processing`** this means the service will **scale down to zero** when there are no requests. This is the most cost-effective option. 
-
+- Keep checked the `Deploy one revision from an existing container image`.
+- Select the **Container image URL** that we uploaded to the **Artifact Registry** from the rigth pop-up window. It should be `europe-west3-docker.pkg.dev/<project-id>/docker-registry/ml-webservice@sha256:<some digit numeber>`. Replace `<project-id>` with the ID of the project that you want to use.
+- Under **Configure**:
+  - **Service name**: `ml-webservice`
+  - **Region**: `europe-west3`
+  - **Authentification**: `Allow public access`  This means that anyone can access the service. You could set up authentication, but that's outside the scope of this tutorial.
+  - **Billing**: `Requested-based`
+  - **Service scaling**:
+    - **Auto scaling**
+    - **Minimum number of instances**: `1`
+    - **Maximum number of instances**: `1` 
 The **`maximum number of instances`** is the maximum number of instances that can be created to handle requests. We'll set this to 1. This is the most cost-effective option.
 
-And under **`Authentication`** we'll choose **`Allow unauthenticated invocations`**. This means that anyone can access the service. You could set up authentication, but that's outside the scope of this tutorial.
 
-In the `Container, Networking, Security` section. We have to change the following settings:
+In the `Containers, Volumes, Networking, Security` section. We have to change the following settings:
 
-Container:
+**Containers**:
 - **Container port**: `9696`
-- **Add Variable**: name: MLFLOW_TRACKING_URI value: <your mlflowuri>
+- **Variables & Secrets**:
+  - Click on **Add Variable**
+- **Add Variable**:
+    - **Name 1**: `MLFLOW_TRACKING_URI` 
+    - **Value 1**: `<your mlflowuri>`
 
-Now we can click "Create".
+
+Now we can click **Create**.
 
 If the **deployment** is successful, click on the service and you should see a **Web URL** next to the name, which will take you to the web server.
