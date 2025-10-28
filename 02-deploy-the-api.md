@@ -75,7 +75,7 @@ To create a virtual machine, click the **Navigation menu** button in the top lef
 We'll be creating a virtual machine with the following settings:
 
 - Under **Machine configuration**
-  - Name**: `ml-webservice`
+  - **Name**: `ml-webservice`
   - **Region**: `europe-west3`
   - **Zone**: `europe-west3-c`
   - **Series**: `E2`
