@@ -4,4 +4,3 @@ mlflow
 uvicorn
 jupyterlab
 python-dotenv
-google-cloud-storage
