@@ -19,8 +19,9 @@ source mlflow/bin/activate
 mlflow server \
  -h 0.0.0.0 \
  -p 5000 \
- --backend-store-uri postgresql://<db-user>:<db-password@<db-private-ip>:5432/<db-name> \
- --default-artifact-root gs://<gcs bucket>/<folder>
+ --backend-store-uri postgresql://<user>:<password>@<db-internal-ip>:5432/<db-name> \
+ --default-artifact-root gs://<GCS bucket>/<folder> \
+ --allowed-hosts <vm-external-ip>:5000
 ```
 
 
