@@ -1,86 +1,187 @@
-# Deploy a Machine Learning Model with FastAPI and Docker
+# Deploy a Local ML Model API with FastAPI, MLflow, and Docker
 
-You can use an Application Programming Interfaces (API) as an Endpoint to a Machine Learning model. This allows you to deploy your model and make it available to other applications. In this tutorial, you will learn how to deploy a Machine Learning model with FastAPI and Docker.
+This repository teaches a local-first deployment workflow for a machine-learning model. You will create and register a small demo taxi-duration model in MLflow, serve it through a FastAPI application, test the API locally, and optionally package it in Docker once the core flow works.
 
-APIs are a set of protocols and tools that allow different software applications to communicate with each other. They have become an essential part of modern software development, enabling developers to build complex systems that integrate with other applications seamlessly.
+## Learning Path
 
-FastAPI is a Python-based web framework that has gained popularity among developers for its speed, simplicity, and easy-to-use API building capabilities. It leverages the latest Python features and best practices to provide a fast, scalable, and reliable API framework.
+1. Create a Python `3.11.3` environment and copy the local configuration file.
+2. Start a local MLflow tracking server with a SQLite backend and local artifact storage.
+3. Open [src/register_mlflow_model.ipynb](src/register_mlflow_model.ipynb) in VS Code and run the notebook to log and register a demo model.
+4. Run the FastAPI application in [webservice_locally](webservice_locally) and send a prediction request.
+5. Run the test suite and explore one meaningful extension.
+6. Optionally build and run the API in Docker against the same local MLflow server.
 
-Docker is a containerization platform that allows you to package your application and its dependencies into a single image. This makes it easy to deploy your application on any platform without worrying about compatibility issues or dependency conflicts.
+- Local MLflow setup: [01-run-local-mlflow.md](01-run-local-mlflow.md)
+- Local API setup: [02-run-the-api-locally.md](02-run-the-api-locally.md)
+- Optional Docker workflow: [03-run-with-docker.md](03-run-with-docker.md)
+- Tests and next steps: [04-test-and-extend-the-api.md](04-test-and-extend-the-api.md)
+- Short review quiz: [Quiz.md](Quiz.md)
 
-## Prerequisites
+## Local Data Services
 
-To follow along with this tutorial, you will need Docker installed on your machine. You can download Docker Desktop for Mac from the official website.
+This repo uses one local service:
 
-Also your MLFlow server should be running. So if you stopped the SQL Server in GCP, you need to start it again first, than the Compute Engine and in the end the MLFlow for that you need to ssh into the Compute Engine and run the following command:
+- `MLflow tracking server` on `http://127.0.0.1:5000`
+  It stores experiment metadata in `mlflow.db` and model artifacts in `mlartifacts/`.
 
-```bash
-source mlflow/bin/activate
-mlflow server \
- -h 0.0.0.0 \
- -p 5000 \
- --backend-store-uri postgresql://<user>:<password>@<db-internal-ip>:5432/<db-name> \
- --default-artifact-root gs://<GCS bucket>/<folder> \
- --allowed-hosts <vm-external-ip>:5000
+The FastAPI app runs locally on `http://127.0.0.1:9696` and loads the registered model from the MLflow Model Registry using the `production` alias.
+
+```mermaid
+flowchart LR
+    A["VS Code notebook"] --> B["Local MLflow server"]
+    B --> C["Registered model: lr-ride-duration@production"]
+    D["FastAPI /predict"] --> C
+    E["Client request"] --> D
+    D --> F["Predicted ride duration"]
+    G["pytest"] --> D
 ```
 
+## Mermaid Diagrams
 
-### Install the GCP SDK CLI
+GitHub renders Mermaid diagrams automatically. In VS Code, install the Mermaid Markdown extension so the diagrams preview correctly:
 
-The GCP SDK is a set of tools that you can use to manage resources and applications hosted on GCP. You can install the GCP SDK on your local machine, or you can use the GCP console.
-
-To install the GCP SDK on your local machine, go to [https://cloud.google.com/cli](https://cloud.google.com/cli) and follow the instructions for your operating system.
-
-For macOS, you can install the GCP SDK by running the following command in your terminal:
-
-```bash
-brew cask install google-cloud-sdk
-```
- For `PowerShell` CLI :
-Using Chocolatey (if installed)
-`choco install gcloudsdk`
-
-Or download and run the installer directly
-(New-Object Net.WebClient).DownloadFile("https://dl.google.com/dl/cloudsdk/channels/rapid/GoogleCloudSDKInstaller.exe", "$env:Temp\GoogleCloudSDKInstaller.exe")
-& $env:Temp\GoogleCloudSDKInstaller.exe
-
-  For `Git-Bash` CLI :
-
-Download the installer
-curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/GoogleCloudSDKInstaller.exe
-
- Run it (opens the GUI installer)
-./GoogleCloudSDKInstaller.exe
-
+- VS Code install link: [Install Markdown Preview Mermaid Support](vscode:extension/bierner.markdown-mermaid)
+- Marketplace page: [Markdown Preview Mermaid Support](https://marketplace.visualstudio.com/items?itemName=bierner.markdown-mermaid)
 
 ## Environment
 
-Please make sure you have forked the repo and set up a new virtual environment. For this purpose you can use the following commands:
+- Python `3.11.3`
+- `uv` for reliable local virtual environment creation
+- VS Code with the Python and Jupyter extensions
+- Docker Desktop for the optional container step
 
-### **`macOS`**
-```BASH
-  pyenv local 3.11.3
-  python -m venv .venv
-  source .venv/bin/activate
-  pip install --upgrade pip
-  pip install -r requirements.txt
-  ```
-### **`WindowsOS`**
- For `PowerShell` CLI :
-  ```powershell
-  pyenv local 3.11.3
-  python -m venv .venv
-  .venv\Scripts\Activate.ps1
-  python -m pip install --upgrade pip
-  pip install -r requirements.txt
-  ```
+The repo includes [.vscode/extensions.json](.vscode/extensions.json) with recommended extensions for this workflow.
 
-  For `Git-Bash` CLI :
+Run `uv --version` before setup. If `uv` is not installed, either install it first or use the fallback `python3.11 -m venv` command below if your local Python installation supports it.
 
-  ```BASH
-  pyenv local 3.11.3
-  python -m venv .venv
-  source .venv/Scripts/activate
-  python -m pip install --upgrade pip
-  pip install -r requirements.txt
-  ```
+## Setup
+
+### `macOS` / Linux
+
+```bash
+uv venv --seed --python 3.11.3 .venv
+source .venv/bin/activate
+python --version
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+cp .env.example .env
+```
+
+### `Windows`
+
+```powershell
+uv venv --seed --python 3.11.3 .venv
+.venv\Scripts\Activate.ps1
+python --version
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+Copy-Item .env.example .env
+```
+
+If you do not use `uv`, you can replace the first command with `python3.11 -m venv .venv` on macOS/Linux or `py -3.11 -m venv .venv` on Windows, as long as that command creates a working Python `3.11.x` environment.
+
+### Quick Sanity Checks
+
+After setup:
+
+- run `python --version` and confirm it reports `3.11.x`
+- open `.env` and confirm the values still point to `http://127.0.0.1:5000`
+- keep all commands in this repo rooted from the project directory unless a step explicitly tells you to `cd`
+
+## VS Code Notebook Workflow
+
+1. Open this repository in VS Code.
+2. Install the recommended extensions if prompted.
+3. Open [src/register_mlflow_model.ipynb](src/register_mlflow_model.ipynb).
+4. Select the `.venv` interpreter as the notebook kernel.
+5. Keep the MLflow server running while you execute the notebook.
+
+## Run the Local Workflow
+
+### 1. Start MLflow
+
+```bash
+source .venv/bin/activate
+mlflow server \
+  --host 127.0.0.1 \
+  --port 5000 \
+  --backend-store-uri sqlite:///mlflow.db \
+  --default-artifact-root ./mlartifacts
+```
+
+Expected result:
+
+- the MLflow UI is available at `http://127.0.0.1:5000`
+- a new `mlflow.db` file appears in the repo root
+- a new `mlartifacts/` folder appears after you log a model
+
+### 2. Register the demo model
+
+Run all cells in [src/register_mlflow_model.ipynb](src/register_mlflow_model.ipynb). The notebook will:
+
+- create a small demo taxi-duration training dataset
+- log a scikit-learn model to the local MLflow server
+- register that model as `lr-ride-duration`
+- assign the `production` alias
+
+Expected result:
+
+- the MLflow UI shows an experiment called `local-taxi-duration-demo`
+- the `Models` page shows `lr-ride-duration`
+- the latest version has the alias `production`
+
+### 3. Start the API
+
+```bash
+source .venv/bin/activate
+cd webservice_locally
+uvicorn app:app --reload --port 9696
+```
+
+Expected result:
+
+- the server prints `Uvicorn running on http://127.0.0.1:9696`
+- `http://127.0.0.1:9696/docs` opens the interactive API docs
+
+### 4. Send a prediction request
+
+```bash
+curl -X POST http://127.0.0.1:9696/predict \
+  -H "Content-Type: application/json" \
+  -d '{
+    "ride_id": "demo-001",
+    "PULocationID": 161,
+    "DOLocationID": 236,
+    "trip_distance": 3.5
+  }'
+```
+
+Expected result:
+
+- the response echoes the ride fields
+- the response includes `predicted_duration`
+
+You can also score multiple rides with `POST /predict_batch`; see [02-run-the-api-locally.md](02-run-the-api-locally.md) for the batch request example.
+
+### 5. Run the tests
+
+```bash
+source .venv/bin/activate
+pytest
+```
+
+Expected result:
+
+- the root route test passes
+- the prediction route test passes with a mocked model response
+- the batch prediction route test passes with mocked model responses
+
+## Learning Objectives
+
+By the end of this repo, you should be able to:
+
+- explain how MLflow tracking and the Model Registry support local deployment workflows
+- run a FastAPI application that serves predictions from a registered model
+- structure request and response payloads with Pydantic
+- write small smoke tests for an API route before making larger changes
+- move from a local development workflow to an optional Docker-based runtime
