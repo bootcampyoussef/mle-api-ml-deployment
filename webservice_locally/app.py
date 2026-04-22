@@ -1,6 +1,8 @@
+"""FastAPI entrypoint for serving local taxi-duration predictions."""
+
 from fastapi import FastAPI
 from data_model import TaxiRide, TaxiRidePrediction
-from predict import predict
+from predict import predict, predict_batch
 
 
 app = FastAPI()
@@ -8,10 +10,22 @@ app = FastAPI()
 
 @app.get("/")
 def index():
+    """Return a simple message so learners can verify the API is running."""
     return {"message": "NYC Taxi Ride Duration Prediction"}
 
 
 @app.post("/predict", response_model=TaxiRidePrediction)
 def predict_duration(data: TaxiRide):
-    prediction = predict("lr-ride-duration", data)
+    """Load the current production model from MLflow and return one prediction."""
+    prediction = predict(data)
     return TaxiRidePrediction(**data.model_dump(), predicted_duration=prediction)
+
+
+@app.post("/predict_batch", response_model=list[TaxiRidePrediction])
+def predict_duration_batch(data: list[TaxiRide]):
+    """Return one prediction for each ride in the request body."""
+    predictions = predict_batch(data)
+    return [
+        TaxiRidePrediction(**ride.model_dump(), predicted_duration=prediction)
+        for ride, prediction in zip(data, predictions)
+    ]
