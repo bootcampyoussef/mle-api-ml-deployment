@@ -6,7 +6,7 @@ This repository teaches a local-first deployment workflow for a machine-learning
 
 1. Create a Python `3.11.3` environment and copy the local configuration file.
 2. Start a local MLflow tracking server with a SQLite backend and local artifact storage.
-3. Open [src/register_mlflow_model.ipynb](src/register_mlflow_model.ipynb) in VS Code and run the notebook to log and register a demo model.
+3. Open [src/register_mlflow_model.ipynb](src/register_mlflow_model.ipynb) in a Jupyter-capable editor and run the notebook to log and register a demo model.
 4. Run the FastAPI application in [webservice_locally](webservice_locally) and send a prediction request.
 5. Run the test suite and explore one meaningful extension.
 6. Optionally build and run the API in Docker against the same local MLflow server.
@@ -28,7 +28,7 @@ The FastAPI app runs locally on `http://127.0.0.1:9696` and loads the registered
 
 ```mermaid
 flowchart LR
-    A["VS Code notebook"] --> B["Local MLflow server"]
+    A["Jupyter notebook"] --> B["Local MLflow server"]
     B --> C["Registered model: lr-ride-duration@production"]
     D["FastAPI /predict"] --> C
     E["Client request"] --> D
@@ -38,47 +38,40 @@ flowchart LR
 
 ## Mermaid Diagrams
 
-GitHub renders Mermaid diagrams automatically. In VS Code, install the Mermaid Markdown extension so the diagrams preview correctly:
-
-- VS Code install link: [Install Markdown Preview Mermaid Support](vscode:extension/bierner.markdown-mermaid)
-- Marketplace page: [Markdown Preview Mermaid Support](https://marketplace.visualstudio.com/items?itemName=bierner.markdown-mermaid)
+GitHub renders Mermaid diagrams automatically. If your local markdown previewer does not render Mermaid, view this README on GitHub or use any Mermaid-capable previewer.
 
 ## Environment
 
 - Python `3.11.3`
-- `uv` for reliable local virtual environment creation
-- VS Code with the Python and Jupyter extensions
+- A Jupyter-capable editor for the notebook
 - Docker Desktop for the optional container step
-
-The repo includes [.vscode/extensions.json](.vscode/extensions.json) with recommended extensions for this workflow.
-
-Run `uv --version` before setup. If `uv` is not installed, either install it first or use the fallback `python3.11 -m venv` command below if your local Python installation supports it.
 
 ## Setup
 
 ### `macOS` / Linux
 
 ```bash
-uv venv --seed --python 3.11.3 .venv
+pyenv local 3.11.3  # optional, only if you use pyenv
+python3 -m venv .venv
 source .venv/bin/activate
 python --version
 python -m pip install --upgrade pip
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 cp .env.example .env
 ```
 
 ### `Windows`
 
 ```powershell
-uv venv --seed --python 3.11.3 .venv
+py -3 -m venv .venv
 .venv\Scripts\Activate.ps1
 python --version
 python -m pip install --upgrade pip
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 Copy-Item .env.example .env
 ```
 
-If you do not use `uv`, you can replace the first command with `python3.11 -m venv .venv` on macOS/Linux or `py -3.11 -m venv .venv` on Windows, as long as that command creates a working Python `3.11.x` environment.
+If `python3 -m venv .venv` fails with an `ensurepip` or missing `encodings` error, the Python installation itself is not creating virtual environments correctly. Install a standard Python `3.11.3` build, for example with `pyenv` or from python.org, then rerun the setup commands above.
 
 ### Quick Sanity Checks
 
@@ -88,13 +81,12 @@ After setup:
 - open `.env` and confirm the values still point to `http://127.0.0.1:5000`
 - keep all commands in this repo rooted from the project directory unless a step explicitly tells you to `cd`
 
-## VS Code Notebook Workflow
+## Notebook Workflow
 
-1. Open this repository in VS Code.
-2. Install the recommended extensions if prompted.
-3. Open [src/register_mlflow_model.ipynb](src/register_mlflow_model.ipynb).
-4. Select the `.venv` interpreter as the notebook kernel.
-5. Keep the MLflow server running while you execute the notebook.
+1. Open this repository in your Jupyter-capable editor.
+2. Open [src/register_mlflow_model.ipynb](src/register_mlflow_model.ipynb).
+3. Select the `.venv` interpreter as the notebook kernel.
+4. Keep the MLflow server running while you execute the notebook.
 
 ## Run the Local Workflow
 

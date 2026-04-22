@@ -90,7 +90,7 @@
 - [ ] Because Docker cannot run Python
 - [ ] Because the recommended order is to validate the local Python workflow first
 - [ ] Because MLflow does not work in containers
-- [ ] Because VS Code replaces Docker
+- [ ] Because a notebook editor replaces Docker
 
 <details>
   <summary>Show Answer</summary>
@@ -102,17 +102,17 @@
 
 ---
 
-**7. Which VS Code extension is recommended for running the notebook in this repo?**
+**7. What should you select as the notebook kernel before running the model-registration notebook?**
 
-- [ ] Docker
-- [ ] Jupyter
-- [ ] GitLens
-- [ ] Remote - SSH
+- [ ] The local MLflow server process
+- [ ] The `.venv` Python environment created during setup
+- [ ] Docker Desktop
+- [ ] The registered model alias
 
 <details>
   <summary>Show Answer</summary>
 
-  **Correct Answer:** Jupyter
+  **Correct Answer:** The `.venv` Python environment created during setup
 
-  **Description:** The repo uses a VS Code Jupyter workflow. The recommended extension list includes the Jupyter extension so learners can run the notebook directly inside VS Code.
+  **Description:** The notebook should run with the same Python environment where the project dependencies were installed. That keeps MLflow, scikit-learn, pandas, and the environment-loading helpers available to the notebook.
 </details>

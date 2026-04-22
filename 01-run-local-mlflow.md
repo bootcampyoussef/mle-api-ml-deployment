@@ -63,9 +63,9 @@ flowchart LR
     C --> D
 ```
 
-## Run The Notebook In VS Code
+## Run The Notebook
 
-Open [src/register_mlflow_model.ipynb](src/register_mlflow_model.ipynb) in VS Code and select your `.venv` interpreter as the Jupyter kernel.
+Open [src/register_mlflow_model.ipynb](src/register_mlflow_model.ipynb) in a Jupyter-capable editor and select your `.venv` interpreter as the notebook kernel.
 
 The notebook is intentionally small and runnable:
 
@@ -76,6 +76,6 @@ The notebook is intentionally small and runnable:
 
 Once the notebook finishes, you should see the registered model in the MLflow UI under `Models`.
 
-If the notebook cannot find the `.venv` kernel, reopen VS Code after creating the environment and select the interpreter again from the notebook toolbar.
+If the notebook cannot find the `.venv` kernel, restart the editor after creating the environment and select the interpreter again from the notebook toolbar.
 
-The notebook loads `.env` from the repository root whether VS Code starts the kernel in the root folder or inside `src/`.
+The notebook loads `.env` from the repository root whether the kernel starts in the root folder or inside `src/`.
