@@ -48,16 +48,14 @@ GitHub renders Mermaid diagrams automatically. If your local markdown previewer 
 
 ## Setup
 
-Start from the repository root. The first command is a preflight check: it should report Python `3.11.x` before you create the environment.
+Start from the repository root.
 
 ### `macOS` / Linux
 
 ```bash
 pyenv local 3.11.3  # optional, only if you use pyenv
-python3 --version
 python3 -m venv .venv
 source .venv/bin/activate
-python --version
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 cp .env.example .env
@@ -66,10 +64,8 @@ cp .env.example .env
 ### `Windows`
 
 ```powershell
-py -3 --version
 py -3 -m venv .venv
 .venv\Scripts\Activate.ps1
-python --version
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 Copy-Item .env.example .env
@@ -77,13 +73,10 @@ Copy-Item .env.example .env
 
 If `python3 -m venv .venv` fails with an `ensurepip` or missing `encodings` error, the Python installation itself is not creating virtual environments correctly. Install a standard Python `3.11.3` build, for example with `pyenv` or from python.org, then rerun the setup commands above.
 
-If the preflight command reports a different Python version, install or select Python `3.11.x` first. The pinned dependencies in [requirements.txt](requirements.txt) were validated for Python `3.11`.
-
 ### Quick Sanity Checks
 
 After setup:
 
-- run `python --version` and confirm it reports `3.11.x`
 - open `.env` and confirm the values still point to `http://127.0.0.1:5000`
 - keep all commands in this repo rooted from the project directory unless a step explicitly tells you to `cd`
 
@@ -197,7 +190,6 @@ Use this checklist when you want to confirm the repo is healthy from a clean loc
 
 | Check | Command or page | Healthy result |
 | --- | --- | --- |
-| Python environment | `python --version` | reports `3.11.x` inside `.venv` |
 | Local config | `.env` | points to `http://127.0.0.1:5000` |
 | MLflow UI | `http://127.0.0.1:5000` | opens and shows the local tracking server |
 | Model registry | MLflow `Models` page | `lr-ride-duration` has the `production` alias |
