@@ -1,15 +1,8 @@
 """Smoke tests for the local FastAPI application."""
 
-from pathlib import Path
-import sys
-
 from fastapi.testclient import TestClient
 
-
-# Make the tutorial app importable without packaging the repo as a module.
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "webservice_locally"))
-
-import app as app_module
+from webservice_locally import app as app_module
 
 
 client = TestClient(app_module.app)

@@ -32,8 +32,7 @@ From the repository root:
 
 ```bash
 source .venv/bin/activate
-cd webservice_locally
-uvicorn app:app --reload --port 9696
+uvicorn webservice_locally.app:app --reload --port 9696
 ```
 
 Once the server is running, open [http://127.0.0.1:9696/docs](http://127.0.0.1:9696/docs) to inspect the interactive API documentation.

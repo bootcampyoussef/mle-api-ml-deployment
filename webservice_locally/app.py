@@ -6,8 +6,8 @@ learners can see where validation ends and prediction logic begins.
 """
 
 from fastapi import FastAPI
-from data_model import TaxiRide, TaxiRidePrediction
-from predict import predict, predict_batch
+from .data_model import TaxiRide, TaxiRidePrediction
+from .predict import predict, predict_batch
 
 
 app = FastAPI(
@@ -33,7 +33,9 @@ def predict_duration(data: TaxiRide):
     return TaxiRidePrediction(**data.model_dump(), predicted_duration=prediction)
 
 
-@app.post("/predict_batch", response_model=list[TaxiRidePrediction], tags=["predictions"])
+@app.post(
+    "/predict_batch", response_model=list[TaxiRidePrediction], tags=["predictions"]
+)
 def predict_duration_batch(data: list[TaxiRide]):
     """Return one prediction for each ride in the request body."""
     if not data:

@@ -4,7 +4,7 @@ This repository teaches a local-first deployment workflow for a machine-learning
 
 ## Learning Path
 
-1. Create a Python `3.11.3` environment and copy the local configuration file.
+1. Create a Python environment and copy the local configuration file.
 2. Start a local MLflow tracking server with a SQLite backend and local artifact storage.
 3. Open [src/register_mlflow_model.ipynb](src/register_mlflow_model.ipynb) in a Jupyter-capable editor and run the notebook to log and register a demo model.
 4. Run the FastAPI application in [webservice_locally](webservice_locally) and send a prediction request.
@@ -71,8 +71,6 @@ python -m pip install -r requirements.txt
 Copy-Item .env.example .env
 ```
 
-If `python3 -m venv .venv` fails with an `ensurepip` or missing `encodings` error, the Python installation itself is not creating virtual environments correctly. Install a standard Python `3.11.3` build, for example with `pyenv` or from python.org, then rerun the setup commands above.
-
 ### Quick Sanity Checks
 
 After setup:
@@ -80,16 +78,20 @@ After setup:
 - open `.env` and confirm the values still point to `http://127.0.0.1:5000`
 - keep all commands in this repo rooted from the project directory unless a step explicitly tells you to `cd`
 
-## Notebook Workflow
+## Run Order
 
-1. Open this repository in your Jupyter-capable editor.
-2. Open [src/register_mlflow_model.ipynb](src/register_mlflow_model.ipynb).
-3. Select the `.venv` interpreter as the notebook kernel.
-4. Keep the MLflow server running while you execute the notebook.
+Use the four step documents in this order:
 
-## Run the Local Workflow
+1. [01-run-local-mlflow.md](01-run-local-mlflow.md)
+   Start the local MLflow server, copy `.env`, and run the notebook that registers `lr-ride-duration@production`.
+2. [02-run-the-api-locally.md](02-run-the-api-locally.md)
+   Start the FastAPI app, try `POST /predict`, and test `POST /predict_batch`.
+3. [04-test-and-extend-the-api.md](04-test-and-extend-the-api.md)
+   Run the test suite and inspect the small batch-prediction extension.
+4. [03-run-with-docker.md](03-run-with-docker.md)
+   Optionally package the API in Docker after the local Python workflow is already working.
 
-The workflow has three moving parts. Keep each long-running service in its own terminal so it is easy to see logs and stop the process later with `Ctrl+C`.
+The workflow has three moving parts. Keep each long-running service in its own terminal so it is easy to read logs and stop processes cleanly with `Ctrl+C`.
 
 ```mermaid
 sequenceDiagram
@@ -104,85 +106,6 @@ sequenceDiagram
     API->>MLflow: Load lr-ride-duration@production
     Learner->>API: Send /predict or /predict_batch request
 ```
-
-### 1. Start MLflow
-
-```bash
-source .venv/bin/activate
-mlflow server \
-  --host 127.0.0.1 \
-  --port 5000 \
-  --backend-store-uri sqlite:///mlflow.db \
-  --default-artifact-root ./mlartifacts
-```
-
-Expected result:
-
-- the MLflow UI is available at `http://127.0.0.1:5000`
-- a new `mlflow.db` file appears in the repo root
-- a new `mlartifacts/` folder appears after you log a model
-
-### 2. Register the demo model
-
-Run all cells in [src/register_mlflow_model.ipynb](src/register_mlflow_model.ipynb). The notebook will:
-
-- create a small demo taxi-duration training dataset
-- log a scikit-learn model to the local MLflow server
-- register that model as `lr-ride-duration`
-- assign the `production` alias
-
-Expected result:
-
-- the MLflow UI shows an experiment called `local-taxi-duration-demo`
-- the `Models` page shows `lr-ride-duration`
-- the latest version has the alias `production`
-
-### 3. Start the API
-
-```bash
-source .venv/bin/activate
-cd webservice_locally
-uvicorn app:app --reload --port 9696
-```
-
-Expected result:
-
-- the server prints `Uvicorn running on http://127.0.0.1:9696`
-- `http://127.0.0.1:9696/docs` opens the interactive API docs
-
-### 4. Send a prediction request
-
-```bash
-curl -X POST http://127.0.0.1:9696/predict \
-  -H "Content-Type: application/json" \
-  -d '{
-    "ride_id": "demo-001",
-    "PULocationID": 161,
-    "DOLocationID": 236,
-    "trip_distance": 3.5
-  }'
-```
-
-Expected result:
-
-- the response echoes the ride fields
-- the response includes `predicted_duration`
-
-You can also score multiple rides with `POST /predict_batch`; see [02-run-the-api-locally.md](02-run-the-api-locally.md) for the batch request example.
-
-### 5. Run the tests
-
-```bash
-source .venv/bin/activate
-pytest
-```
-
-Expected result:
-
-- the root route test passes
-- the prediction route test passes with a mocked model response
-- the batch prediction route test passes with mocked model responses
-- the empty batch route test passes without loading a model
 
 ## End-To-End Checklist
 
