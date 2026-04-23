@@ -26,6 +26,8 @@ flowchart LR
 | `POST /predict` | one taxi ride | one ride plus `predicted_duration` | scoring a single example |
 | `POST /predict_batch` | list of taxi rides | list of predictions in request order | scoring several examples together |
 
+If you send an empty list to `POST /predict_batch`, the API returns `[]`. That keeps the behavior predictable for callers that build requests dynamically.
+
 ## Start The API
 
 From the repository root:
