@@ -18,6 +18,14 @@ flowchart LR
     D --> E["Prediction response"]
 ```
 
+## Routes At A Glance
+
+| Route | Input | Output | Use it when |
+| --- | --- | --- | --- |
+| `GET /` | no body | project health message | checking that the app is alive |
+| `POST /predict` | one taxi ride | one ride plus `predicted_duration` | scoring a single example |
+| `POST /predict_batch` | list of taxi rides | list of predictions in request order | scoring several examples together |
+
 ## Start The API
 
 From the repository root:
@@ -35,6 +43,8 @@ If you see a model-loading error here, go back to step `01` and confirm that:
 - the MLflow server is still running
 - the notebook finished successfully
 - the registered model has the `production` alias
+
+The most useful debugging order is: first check MLflow, then check the model alias, then restart the API. Restarting matters because the API loads the model when a prediction request runs.
 
 ## Example Request
 

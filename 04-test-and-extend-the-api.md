@@ -20,6 +20,7 @@ This repo includes [tests/test_app.py](tests/test_app.py):
 - one test checks that `GET /` returns the expected message
 - one test checks that `POST /predict` returns the original payload plus a prediction field
 - one test checks that `POST /predict_batch` returns one prediction per input ride
+- one test checks that an empty batch returns an empty response without loading a model
 
 The prediction tests mock the model calls so they do not depend on a running MLflow server. That keeps the tests fast and focused on API behavior.
 
@@ -43,8 +44,8 @@ pytest
 
 Expected result:
 
-- both tests pass
-- the output ends with a short `3 passed` summary
+- all four tests pass
+- the output ends with a short `4 passed` summary
 
 ## What The Tests Cover
 
@@ -53,6 +54,7 @@ Expected result:
 | `GET /` | the app starts and responds with the expected message | confirms the API entrypoint is wired correctly |
 | `POST /predict` | the route accepts a valid payload and returns `predicted_duration` | confirms request parsing and response formatting work |
 | `POST /predict_batch` | the route accepts a list and preserves response order | confirms batch requests stay aligned with input rides |
+| `POST /predict_batch` with `[]` | the route returns `[]` without loading a model | keeps empty requests cheap and predictable |
 
 ## Implemented Extension
 
@@ -64,6 +66,20 @@ The implementation follows this workflow:
 2. the MLflow model is loaded once for the whole batch
 3. `app.py` returns one `TaxiRidePrediction` per input ride
 4. `tests/test_app.py` confirms the batch response shape and order
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant API as "FastAPI /predict_batch"
+    participant Prep as "prepare_features"
+    participant Model as "MLflow model"
+    Client->>API: Send a list of rides
+    API->>Prep: Convert each ride into model features
+    Prep-->>API: Return one table of feature rows
+    API->>Model: Predict once for the whole batch
+    Model-->>API: Return one prediction per row
+    API-->>Client: Return predictions in input order
+```
 
 ## Deliverable Checklist
 

@@ -48,10 +48,13 @@ GitHub renders Mermaid diagrams automatically. If your local markdown previewer 
 
 ## Setup
 
+Start from the repository root. The first command is a preflight check: it should report Python `3.11.x` before you create the environment.
+
 ### `macOS` / Linux
 
 ```bash
 pyenv local 3.11.3  # optional, only if you use pyenv
+python3 --version
 python3 -m venv .venv
 source .venv/bin/activate
 python --version
@@ -63,6 +66,7 @@ cp .env.example .env
 ### `Windows`
 
 ```powershell
+py -3 --version
 py -3 -m venv .venv
 .venv\Scripts\Activate.ps1
 python --version
@@ -72,6 +76,8 @@ Copy-Item .env.example .env
 ```
 
 If `python3 -m venv .venv` fails with an `ensurepip` or missing `encodings` error, the Python installation itself is not creating virtual environments correctly. Install a standard Python `3.11.3` build, for example with `pyenv` or from python.org, then rerun the setup commands above.
+
+If the preflight command reports a different Python version, install or select Python `3.11.x` first. The pinned dependencies in [requirements.txt](requirements.txt) were validated for Python `3.11`.
 
 ### Quick Sanity Checks
 
@@ -89,6 +95,22 @@ After setup:
 4. Keep the MLflow server running while you execute the notebook.
 
 ## Run the Local Workflow
+
+The workflow has three moving parts. Keep each long-running service in its own terminal so it is easy to see logs and stop the process later with `Ctrl+C`.
+
+```mermaid
+sequenceDiagram
+    participant Learner
+    participant MLflow as "MLflow server :5000"
+    participant Notebook as "Registration notebook"
+    participant API as "FastAPI app :9696"
+    Learner->>MLflow: Start local tracking server
+    Learner->>Notebook: Run all cells
+    Notebook->>MLflow: Log run, artifacts, and model alias
+    Learner->>API: Start uvicorn
+    API->>MLflow: Load lr-ride-duration@production
+    Learner->>API: Send /predict or /predict_batch request
+```
 
 ### 1. Start MLflow
 
@@ -167,6 +189,20 @@ Expected result:
 - the root route test passes
 - the prediction route test passes with a mocked model response
 - the batch prediction route test passes with mocked model responses
+- the empty batch route test passes without loading a model
+
+## End-To-End Checklist
+
+Use this checklist when you want to confirm the repo is healthy from a clean local state:
+
+| Check | Command or page | Healthy result |
+| --- | --- | --- |
+| Python environment | `python --version` | reports `3.11.x` inside `.venv` |
+| Local config | `.env` | points to `http://127.0.0.1:5000` |
+| MLflow UI | `http://127.0.0.1:5000` | opens and shows the local tracking server |
+| Model registry | MLflow `Models` page | `lr-ride-duration` has the `production` alias |
+| API docs | `http://127.0.0.1:9696/docs` | shows `/predict` and `/predict_batch` |
+| Tests | `pytest` | ends with `4 passed` |
 
 ## Learning Objectives
 

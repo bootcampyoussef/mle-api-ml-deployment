@@ -74,3 +74,17 @@ def test_predict_batch_returns_one_prediction_per_payload(monkeypatch):
         {**payload[0], "predicted_duration": 10.0},
         {**payload[1], "predicted_duration": 20.0},
     ]
+
+
+def test_predict_batch_accepts_an_empty_list(monkeypatch):
+    """An empty batch should return immediately without loading the model."""
+
+    def fail_if_called(data):
+        raise AssertionError("predict_batch should not be called for an empty payload")
+
+    monkeypatch.setattr(app_module, "predict_batch", fail_if_called)
+
+    response = client.post("/predict_batch", json=[])
+
+    assert response.status_code == 200
+    assert response.json() == []

@@ -13,6 +13,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 def prepare_features(ride):
     """Transform the API payload into the feature columns expected by the model."""
     features = {}
+    # The notebook trains on the combined route string, so the API must recreate it.
     features["trip_route"] = f"{ride.PULocationID}_{ride.DOLocationID}"
     features["trip_distance"] = ride.trip_distance
     return features
@@ -22,6 +23,7 @@ def load_model(model_name, alias):
     """Resolve a model by name and alias from the local MLflow Model Registry."""
     import mlflow
 
+    # Aliases keep the API stable while the underlying registered version changes.
     model_uri = f"models:/{model_name}@{alias}"
     model = mlflow.pyfunc.load_model(model_uri)
     return model
@@ -56,6 +58,7 @@ def predict_batch(rides):
     """Score a list of rides with one model load and one tabular prediction call."""
     model_name, model_alias = configure_mlflow()
 
+    # Batch prediction keeps request order by building one feature row per ride.
     model_input = pd.DataFrame([prepare_features(ride) for ride in rides])
     model = load_model(model_name, model_alias)
     predictions = model.predict(model_input)

@@ -11,6 +11,15 @@ The local MLflow server gives you:
 - artifact storage in the `mlartifacts/` folder;
 - a SQLite metadata database in `mlflow.db`.
 
+```mermaid
+flowchart TB
+    A["Notebook training run"] --> B["MLflow experiment run"]
+    B --> C["Model artifact in mlartifacts/"]
+    B --> D["Metrics and params in mlflow.db"]
+    C --> E["Registered model version"]
+    E --> F["Alias: production"]
+```
+
 ## Start The Tracking Server
 
 From the repository root, activate your virtual environment and run:
@@ -73,6 +82,8 @@ The notebook is intentionally small and runnable:
 2. it trains a scikit-learn regression pipeline;
 3. it logs the model to MLflow;
 4. it registers the model and assigns the `production` alias.
+
+The alias is the key handoff to the API. The service does not load “whatever model was trained last”; it loads the model version currently marked as `production`.
 
 Once the notebook finishes, you should see the registered model in the MLflow UI under `Models`.
 
