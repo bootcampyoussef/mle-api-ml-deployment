@@ -2,11 +2,11 @@
 
 This step sets up the local service that both the notebook and the FastAPI application use. The goal is to keep the whole deployment workflow on your machine without depending on any remote artifact storage.
 
-## What This Service Does
+## What this service does
 
 The local MLflow server gives you:
 
-- experiment tracking on `http://127.0.0.1:5000`;
+- experiment tracking on <http://127.0.0.1:5000>;
 - a local Model Registry;
 - artifact storage in the `mlartifacts/` folder;
 - a SQLite metadata database in `mlflow.db`.
@@ -20,12 +20,11 @@ flowchart TB
     E --> F["Alias: production"]
 ```
 
-## Start The Tracking Server
+## Start the tracking server
 
-From the repository root, activate your virtual environment and run:
+From the repository root, run:
 
 ```bash
-source .venv/bin/activate
 mlflow server \
   --host 127.0.0.1 \
   --port 5000 \
@@ -37,22 +36,22 @@ Keep this terminal window open while you work through the notebook and the API.
 
 Expected result:
 
-- the terminal stays busy because the MLflow server is running
-- the MLflow UI is available at `http://127.0.0.1:5000`
+- The terminal stays busy because the MLflow server is running
+- The MLflow UI is available at <http://127.0.0.1:5000>
 - `mlflow.db` is created in the repository root
 - `mlartifacts/` appears after the notebook logs the model
 
-## Configure The Environment File
+## Configure the environment file
 
 Copy the example environment file once:
 
-### `macOS` / Linux
+`macOS` / `Linux` / `Git Bash`
 
 ```bash
 cp .env.example .env
 ```
 
-### `Windows`
+`PowerShell`
 
 ```powershell
 Copy-Item .env.example .env
@@ -72,16 +71,23 @@ flowchart LR
     C --> D
 ```
 
-## Run The Notebook
+### Quick Sanity Checks
 
-Open [src/register_mlflow_model.ipynb](src/register_mlflow_model.ipynb) in a Jupyter-capable editor and select your `.venv` interpreter as the notebook kernel.
+After setup:
+
+- Open `.env` and confirm the values still point to `http://127.0.0.1:5000`
+- Keep all commands in this repo rooted from the project directory
+
+## Run the notebook
+
+Open [src/register_mlflow_model.ipynb](src/register_mlflow_model.ipynb) and select your `.venv` interpreter as the notebook kernel.
 
 The notebook is intentionally small and runnable:
 
-1. it builds a compact demo dataset;
-2. it trains a scikit-learn regression pipeline;
-3. it logs the model to MLflow;
-4. it registers the model and assigns the `production` alias.
+1. It builds a compact demo dataset,
+2. trains a scikit-learn regression pipeline,
+3. logs the model to MLflow,
+4. registers the model and assigns the `production` alias.
 
 The alias is the key handoff to the API. The service does not load “whatever model was trained last”; it loads the model version currently marked as `production`.
 

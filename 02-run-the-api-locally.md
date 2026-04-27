@@ -1,53 +1,52 @@
-# Run The FastAPI App Locally
+# Run the FastAPI App Locally
 
 Now that the model is registered in local MLflow, you can serve predictions from a local FastAPI application.
 
-## API Files
+## API files
 
 The local API lives in the [webservice_locally](webservice_locally) folder:
 
-- `app.py` defines the FastAPI routes;
-- `data_model.py` defines the request and response schemas with Pydantic;
-- `predict.py` loads `lr-ride-duration@production` from the local MLflow registry and returns single or batch predictions.
+- [app.py](webservice_locally/app.py) defines the FastAPI routes;
+- [data_model.py](webservice_locally/data_model.py) defines the request and response schemas with Pydantic;
+- [predict.py](webservice_locally/predict.py) loads `lr-ride-duration@production` from the local MLflow registry and returns single or batch predictions.
 
 ```mermaid
 flowchart LR
-    A["POST /predict or /predict_batch request"] --> B["Pydantic validation"]
-    B --> C["Feature preparation"]
-    C --> D["MLflow model load"]
-    D --> E["Prediction response"]
+    A["POST /predict or<br>/predict_batch request"] --> B["Pydantic<br>validation"]
+    B --> C["Feature<br>preparation"]
+    C --> D["MLflow model<br>load"]
+    D --> E["Prediction<br>response"]
 ```
 
-## Routes At A Glance
+## Routes at a glance
 
 | Route | Input | Output | Use it when |
 | --- | --- | --- | --- |
-| `GET /` | no body | project health message | checking that the app is alive |
-| `POST /predict` | one taxi ride | one ride plus `predicted_duration` | scoring a single example |
-| `POST /predict_batch` | list of taxi rides | list of predictions in request order | scoring several examples together |
+| `GET /` | No body | Project health message | Checking that the app is alive |
+| `POST /predict` | One taxi ride | One ride plus `predicted_duration` | Scoring a single example |
+| `POST /predict_batch` | List of taxi rides | List of predictions in request order | Scoring several examples together |
 
 If you send an empty list to `POST /predict_batch`, the API returns `[]`. That keeps the behavior predictable for callers that build requests dynamically.
 
-## Start The API
+## Start the API
 
-From the repository root:
+From the repository root, run:
 
 ```bash
-source .venv/bin/activate
 uvicorn webservice_locally.app:app --reload --port 9696
 ```
 
-Once the server is running, open [http://127.0.0.1:9696/docs](http://127.0.0.1:9696/docs) to inspect the interactive API documentation.
+Once the server is running, open <http://127.0.0.1:9696/docs> to inspect the interactive API documentation.
 
 If you see a model-loading error here, go back to step `01` and confirm that:
 
-- the MLflow server is still running
-- the notebook finished successfully
-- the registered model has the `production` alias
+- the MLflow server is still running;
+- the notebook finished successfully;
+- the registered model has the `production` alias.
 
 The most useful debugging order is: first check MLflow, then check the model alias, then restart the API. Restarting matters because the API loads the model when a prediction request runs.
 
-## Example Request
+## Example request
 
 ```bash
 curl -X POST http://127.0.0.1:9696/predict \
@@ -60,7 +59,7 @@ curl -X POST http://127.0.0.1:9696/predict \
   }'
 ```
 
-## Expected Response Shape
+## Expected response shape
 
 The exact prediction value will vary depending on the model version you registered, but the response will look like this:
 
@@ -70,11 +69,11 @@ The exact prediction value will vary depending on the model version you register
   "PULocationID": 161,
   "DOLocationID": 236,
   "trip_distance": 3.5,
-  "predicted_duration": 910.42
+  "predicted_duration": 16.88
 }
 ```
 
-## Batch Prediction Request
+## Batch prediction request
 
 Use `POST /predict_batch` when you want to score several rides in one request:
 
@@ -99,10 +98,24 @@ curl -X POST http://127.0.0.1:9696/predict_batch \
 
 The response is a list with one prediction object per input ride, in the same order.
 
-## Suggested Local Checks
+```mermaid
+sequenceDiagram
+    participant Client
+    participant API as "FastAPI /predict_batch"
+    participant Prep as "prepare_features"
+    participant Model as "MLflow model"
+    Client->>API: Send a list of rides
+    API->>Prep: Convert each ride into model features
+    Prep-->>API: Return one table of feature rows
+    API->>Model: Predict once for the whole batch
+    Model-->>API: Return one prediction per row
+    API-->>Client: Return predictions in input order
+```
+
+## Suggested local checks
 
 - Visit `GET /` to confirm the app is running.
 - Use `/docs` to inspect the request schema.
 - Try a few different `trip_distance` values and compare the predicted durations.
 - Try `POST /predict_batch` and confirm the response order matches the request order.
-- Run [04-test-and-extend-the-api.md](04-test-and-extend-the-api.md) before making code changes.
+- Run [03-test-the-api.md](03-test-the-api.md) before making code changes.

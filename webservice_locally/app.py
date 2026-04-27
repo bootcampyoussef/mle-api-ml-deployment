@@ -1,9 +1,8 @@
-"""FastAPI entrypoint for serving local taxi-duration predictions.
+"""FastAPI entrypoint for serving local taxi-duration predictions."""
 
-Run this module with Uvicorn after the notebook has registered a model in the
-local MLflow Model Registry. The route functions stay intentionally small so
-learners can see where validation ends and prediction logic begins.
-"""
+# Run this module with Uvicorn after the notebook has registered a model in the
+# local MLflow Model Registry. The route functions stay intentionally small so
+# you can see where validation ends and prediction logic begins.
 
 from fastapi import FastAPI
 from .data_model import TaxiRide, TaxiRidePrediction
@@ -22,7 +21,7 @@ app = FastAPI(
 
 @app.get("/", tags=["health"])
 def index():
-    """Return a simple message so learners can verify the API is running."""
+    """Return a simple message so we can verify the API is running."""
     return {"message": "NYC Taxi Ride Duration Prediction"}
 
 
