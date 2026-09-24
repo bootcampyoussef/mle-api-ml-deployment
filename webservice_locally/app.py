@@ -5,9 +5,9 @@
 # you can see where validation ends and prediction logic begins.
 
 from fastapi import FastAPI
+
 from .data_model import TaxiRide, TaxiRidePrediction
 from .predict import predict, predict_batch
-
 
 app = FastAPI(
     title="Local Taxi Duration Prediction API",

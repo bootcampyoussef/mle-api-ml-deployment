@@ -4,7 +4,6 @@ from fastapi.testclient import TestClient
 
 from webservice_locally import app as app_module
 
-
 client = TestClient(app_module.app)
 
 
