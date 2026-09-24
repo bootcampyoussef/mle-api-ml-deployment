@@ -8,7 +8,7 @@ ENV UV_COMPILE_BYTECODE=1 \
 
 COPY --from=uv /uv /uvx /bin/
 COPY pyproject.toml uv.lock ./
-RUN uv sync --locked --no-dev --no-install-project
+RUN uv sync --locked --no-dev --no-install-project --no-cache
 
 # Copy only the API package; MLflow artifacts stay outside the image and are mounted at runtime.
 COPY webservice_locally /app/webservice_locally
