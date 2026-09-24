@@ -6,8 +6,8 @@ Now that the model is registered in local MLflow, you can serve predictions from
 
 The local API lives in the [webservice_locally](webservice_locally) folder:
 
-- [app.py](webservice_locally/app.py) defines the FastAPI routes;
-- [data_model.py](webservice_locally/data_model.py) defines the request and response schemas with Pydantic;
+- [app.py](webservice_locally/app.py) defines the FastAPI routes,
+- [data_model.py](webservice_locally/data_model.py) defines the request and response schemas with Pydantic,
 - [predict.py](webservice_locally/predict.py) loads `lr-ride-duration@production` from the local MLflow registry and returns single or batch predictions.
 
 ```mermaid
@@ -38,13 +38,13 @@ uv run uvicorn webservice_locally.app:app --reload --port 9696
 
 Once the server is running, open <http://127.0.0.1:9696/docs> to inspect the interactive API documentation.
 
-If you see a model-loading error here, go back to step `01` and confirm that:
+If a prediction request fails with a model-loading error, go back to step `01` and confirm that:
 
-- the MLflow server is still running;
-- the notebook finished successfully;
+- the MLflow server is still running,
+- the notebook finished successfully,
 - the registered model has the `production` alias.
 
-The most useful debugging order is: first check MLflow, then check the model alias, then restart the API. Restarting matters because the API loads the model when a prediction request runs.
+After these checks, send the request again. You do not need to restart the API, because it loads the model from MLflow each time a prediction request runs.
 
 ## Example request
 

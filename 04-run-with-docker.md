@@ -9,18 +9,17 @@ This step uses the repository's [Dockerfile](Dockerfile) to package the FastAPI 
 From the repository root, run:
 
 ```bash
-docker --version
 docker build -t ml-api-local .
 ```
 
 Expected result:
 
-- Docker finishes the build without errors
-- The local image `ml-api-local` appears in `docker images`
+- Docker finishes the build without errors.
+- The local image `ml-api-local` appears in `docker images`.
 
 ## Run the container
 
-If you are currently running the local FastAPI app from step `02`, stop it first so Docker can bind to port `9696`.
+If you are currently running the local FastAPI app from step `02`, **stop it** first so Docker can bind to port `9696`.
 
 The container still needs access to the MLflow server and model artifacts that are running on your machine. MLflow stores these artifacts under an absolute path in `mlartifacts/`. The volume mount below makes that path visible inside the container so `models:/lr-ride-duration@production` can load correctly.
 

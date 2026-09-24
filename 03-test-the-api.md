@@ -17,10 +17,10 @@ flowchart LR
 
 This repository includes [tests/test_app.py](tests/test_app.py):
 
-- One test checks that `GET /` returns the expected message
-- One test checks that `POST /predict` returns the original payload plus a prediction field
-- One test checks that `POST /predict_batch` returns one prediction per input ride
-- One test checks that an empty batch returns an empty response without loading a model
+- One test checks that `GET /` returns the expected message.
+- One test checks that `POST /predict` returns the original payload plus a prediction field.
+- One test checks that `POST /predict_batch` returns one prediction per input ride.
+- One test checks that an empty batch returns an empty response without loading a model.
 
 The prediction tests mock the model calls so they do not depend on a running MLflow server. That keeps the tests fast and focused on API behavior.
 
@@ -36,8 +36,8 @@ uv run python -m pytest
 
 Expected result:
 
-- All four tests pass
-- The output ends with a short `4 passed` summary
+- All four tests pass.
+- The output ends with a short `4 passed` summary.
 
 ## What the tests cover
 
