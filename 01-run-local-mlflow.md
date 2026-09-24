@@ -25,12 +25,15 @@ flowchart TB
 From the repository root, run:
 
 ```bash
-mlflow server \
+uv run mlflow server \
   --host 127.0.0.1 \
   --port 5000 \
   --backend-store-uri sqlite:///mlflow.db \
-  --default-artifact-root ./mlartifacts
+  --default-artifact-root ./mlartifacts \
+  --allowed-hosts "localhost:5000,127.0.0.1:5000,host.docker.internal:5000"
 ```
+
+`--allowed-hosts` lists the addresses the server accepts requests from. MLflow blocks unknown hosts by default, so `host.docker.internal:5000` is added here to let the Docker container from step `04` reach the server.
 
 Keep this terminal window open while you work through the notebook and the API.
 
@@ -80,7 +83,7 @@ After setup:
 
 ## Run the notebook
 
-Open [src/register_mlflow_model.ipynb](src/register_mlflow_model.ipynb) and select your `.venv` interpreter as the notebook kernel.
+Open [src/register_mlflow_model.ipynb](src/register_mlflow_model.ipynb) and select the `.venv` environment created by `uv sync` as the notebook kernel.
 
 The notebook is intentionally small and runnable:
 
@@ -93,6 +96,6 @@ The alias is the key handoff to the API. The service does not load “whatever m
 
 Once the notebook finishes, you should see the registered model in the MLflow UI under `Models`.
 
-If the notebook cannot find the `.venv` kernel, restart the editor after creating the environment and select the interpreter again from the notebook toolbar.
+If the notebook cannot find the `.venv` kernel, restart the editor after running `uv sync` and select the interpreter again from the notebook toolbar.
 
 The notebook loads `.env` from the repository root whether the kernel starts in the root folder or inside `src/`.

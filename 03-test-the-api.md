@@ -28,26 +28,11 @@ The prediction tests mock the model calls so they do not depend on a running MLf
 
 From the repository root, run:
 
-`macOS` / `Linux`:
-
 ```bash
-source .venv/bin/activate
-python -m pytest
+uv run python -m pytest
 ```
 
-`Git Bash`:
-
-```bash
-source .venv/Scripts/activate
-python -m pytest
-```
-
-`PowerShell`:
-
-```powershell
-.venv\Scripts\Activate.ps1
-python -m pytest
-```
+`python -m pytest` (rather than plain `pytest`) adds the repository root to the import path, so the tests can import the `webservice_locally` package.
 
 Expected result:
 
@@ -68,6 +53,6 @@ Expected result:
 If you update the API, aim to leave the repository in this state:
 
 - The route appears in `/docs`.
-- `pytest` still passes.
+- `uv run python -m pytest` still passes.
 - The behavior is described in the relevant markdown file.
 - The change still works with the local MLflow setup from steps `01` and `02`.

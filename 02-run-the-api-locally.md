@@ -33,7 +33,7 @@ If you send an empty list to `POST /predict_batch`, the API returns `[]`. That k
 From the repository root, run:
 
 ```bash
-uvicorn webservice_locally.app:app --reload --port 9696
+uv run uvicorn webservice_locally.app:app --reload --port 9696
 ```
 
 Once the server is running, open <http://127.0.0.1:9696/docs> to inspect the interactive API documentation.
