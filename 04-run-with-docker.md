@@ -24,30 +24,6 @@ If you are currently running the local FastAPI app from step `02`, stop it first
 
 The container still needs access to the MLflow server and model artifacts that are running on your machine. MLflow stores these artifacts under an absolute path in `mlartifacts/`. The volume mount below makes that path visible inside the container so `models:/lr-ride-duration@production` can load correctly.
 
-`macOS` / `Git Bash`
-
-```bash
-docker run --rm -p 9696:9696 \
-  --env-file .env \
-  -e MLFLOW_TRACKING_URI=http://host.docker.internal:5000 \
-  -v "$PWD/mlartifacts:$PWD/mlartifacts" \
-  ml-api-local
-```
-
-`PowerShell`
-
-```powershell
-docker run --rm -p 9696:9696 `
-  --env-file .env `
-  -e MLFLOW_TRACKING_URI=http://host.docker.internal:5000 `
-  -v "${PWD}\mlartifacts:${PWD}\mlartifacts" `
-  ml-api-local
-```
-
-> **Note on Windows:** Docker path handling can vary on Windows because MLflow records local artifact paths. If you completed steps `01` and `02` on Windows and the Docker run or the API call fail, adapt the volume mount so the `mlartifacts` path recorded by MLflow is visible inside the container. If this is unfamiliar, keep using the local Python workflow from step `02` and treat Docker as optional.
-
-`Linux`
-
 ```bash
 docker run --rm -p 9696:9696 \
   --add-host=host.docker.internal:host-gateway \
@@ -56,6 +32,10 @@ docker run --rm -p 9696:9696 \
   -v "$PWD/mlartifacts:$PWD/mlartifacts" \
   ml-api-local
 ```
+
+`--add-host` maps `host.docker.internal` to your machine so the container can reach the MLflow server. Docker Desktop already defines this name, and the flag makes the same command work on Linux too.
+
+> **Note on Windows:** Docker path handling can vary on Windows because MLflow records local artifact paths. If you completed steps `01` and `02` on Windows and the Docker run or the API call fail, adapt the volume mount so the `mlartifacts` path recorded by MLflow is visible inside the container. If this is unfamiliar, keep using the local Python workflow from step `02` and treat Docker as optional.
 
 ## Test the containerized API
 

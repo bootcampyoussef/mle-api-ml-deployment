@@ -35,6 +35,8 @@ uv run mlflow server \
 
 `--allowed-hosts` lists the addresses the server accepts requests from. MLflow blocks unknown hosts by default, so `host.docker.internal:5000` is added here to let the Docker container from step `04` reach the server.
 
+> **Linux users without Docker Desktop:** start the server with `--host 0.0.0.0` instead of `--host 127.0.0.1`. With plain Docker Engine, the container reaches your machine through the Docker network rather than `127.0.0.1`, so the server must listen on all interfaces. Only do this on a trusted network, because other devices on it can then reach the server too.
+
 Keep this terminal window open while you work through the notebook and the API.
 
 Expected result:
@@ -44,23 +46,9 @@ Expected result:
 - `mlflow.db` is created in the repository root
 - `mlartifacts/` appears after the notebook logs the model
 
-## Configure the environment file
+## Check the environment file
 
-Copy the example environment file once:
-
-`macOS` / `Linux` / `Git Bash`
-
-```bash
-cp .env.example .env
-```
-
-`PowerShell`
-
-```powershell
-Copy-Item .env.example .env
-```
-
-The default values already point to the local tracking server:
+You created `.env` from `.env.example` during the [README Setup](README.md#setup). The default values already point to the local tracking server:
 
 - `MLFLOW_TRACKING_URI=http://127.0.0.1:5000`
 - `REGISTERED_MODEL_NAME=lr-ride-duration`
