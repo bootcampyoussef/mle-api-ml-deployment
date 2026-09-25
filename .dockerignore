@@ -11,3 +11,5 @@ mlartifacts/
 
 # Never send secrets to the Docker daemon.
 .env
+.env.*
+!.env.example
