@@ -1,0 +1,15 @@
+# Keep the build context small: the image only needs pyproject.toml, uv.lock and webservice_locally/.
+.venv/
+.git/
+__pycache__/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Local MLflow data is mounted at runtime, not baked into the image.
+mlflow.db
+mlartifacts/
+
+# Never send secrets to the Docker daemon.
+.env
+.env.*
+!.env.example

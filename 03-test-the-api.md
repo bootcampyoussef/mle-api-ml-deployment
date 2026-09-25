@@ -17,10 +17,10 @@ flowchart LR
 
 This repository includes [tests/test_app.py](tests/test_app.py):
 
-- One test checks that `GET /` returns the expected message
-- One test checks that `POST /predict` returns the original payload plus a prediction field
-- One test checks that `POST /predict_batch` returns one prediction per input ride
-- One test checks that an empty batch returns an empty response without loading a model
+- One test checks that `GET /` returns the expected message.
+- One test checks that `POST /predict` returns the original payload plus a prediction field.
+- One test checks that `POST /predict_batch` returns one prediction per input ride.
+- One test checks that an empty batch returns an empty response without loading a model.
 
 The prediction tests mock the model calls so they do not depend on a running MLflow server. That keeps the tests fast and focused on API behavior.
 
@@ -28,31 +28,16 @@ The prediction tests mock the model calls so they do not depend on a running MLf
 
 From the repository root, run:
 
-`macOS` / `Linux`:
-
 ```bash
-source .venv/bin/activate
-python -m pytest
+uv run python -m pytest
 ```
 
-`Git Bash`:
-
-```bash
-source .venv/Scripts/activate
-python -m pytest
-```
-
-`PowerShell`:
-
-```powershell
-.venv\Scripts\Activate.ps1
-python -m pytest
-```
+`python -m pytest` (rather than plain `pytest`) adds the repository root to the import path, so the tests can import the `webservice_locally` package.
 
 Expected result:
 
-- All four tests pass
-- The output ends with a short `4 passed` summary
+- All four tests pass.
+- The output ends with a short `4 passed` summary.
 
 ## What the tests cover
 
@@ -68,6 +53,6 @@ Expected result:
 If you update the API, aim to leave the repository in this state:
 
 - The route appears in `/docs`.
-- `pytest` still passes.
+- `uv run python -m pytest` still passes.
 - The behavior is described in the relevant markdown file.
 - The change still works with the local MLflow setup from steps `01` and `02`.
